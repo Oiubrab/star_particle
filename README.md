@@ -1,4 +1,4 @@
-# star_particle
+# Star Particle Simulation
 A star simulation tool to explore galactic evolution
 
 WHAT DOES THIS DO?
@@ -19,13 +19,39 @@ As yet, this code simply updates all vectors based on current position in a mill
 HOW TO RUN?
 -----------
 
-In order to run, compile the particle_sim.f95 with the physics.f95 module and run the output. If you have gfortran this would be:
+There are two ways to get cool output here. At each step, if you need to see running instructions, just run the binary (fortran) or script (bash,python) and instructions will be outputted.
+
+### The Little Less Easy Way 
+
+In order to run the simulation, compile the particle_sim.f95 with the physics.f95 module and run the output. If you have gfortran this would be:
 
 	gfortran physics.f95 particle_sim.f95 -o <your_name_here>
-	./<your_name_here>
+	./<your_name_here> <initial_separation> <particle_number> <timesteps> <delta_time> <initial_conditions> 
 
-This will create a folder with a set of text files that contaion the position, velocity and acceleration information. In order to visualise the data, run the python_plotter.py script:
+This will create a folder with a set of text files (for each timestep) that contaion the position, velocity and acceleration information for the particles requested by particle_number, at the initial_separation requested. As of writing this, there are two initial conditions setup here. The 'random' initial_conditions input will simply place particles randomly throughout the field defined by initial_separation. The 'random_2_clumps' Initial_conditions input splits the particles into two even groups and places them in diagonally opposed squares. In order to visualise the data, run the python_plotter.py script:
 
-	python python_plotter.py <size>
+	python python_plotter.py <field_snapshot_scale> <particle_number> <timesteps> <delta_time> <initial_conditions>
 
-to output an mp4 of the particle simulation. Input a number, in place of <size>, to determine the dimensions of the viewing area.
+to first view the simulation in a window, then output an mp4 of the particle simulation when the screen is closed. Input a number, in place of field_snapshot_scale, to determine the dimensions of the viewing area. All other input variables should be the same as hat inputted into the fortran code.
+
+### The Easy Way
+
+If you are doing this in bash, a convenient bash script has been written to defacate the above program all over your computer in one go. Just run:
+
+	sh execution <field_snapshot_scale> <initial_separation> <particle_number> <timesteps> <delta_time> <initial_conditions>
+
+### What You Need To Suceed (Or, What I Used)
+
+Bash:
+
+- Bash
+
+Fortran:
+
+- Gfortran
+
+Python:
+
+- python 2.7.14
+- numpy 1.16.4
+- matplotlib 2.0.2

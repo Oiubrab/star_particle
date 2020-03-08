@@ -64,7 +64,7 @@ subroutine print_interval(start,finish)
 	t_hr = floor(total_time/3600)
 	t_min = (total_time-t_hr*3600)/60
 	t_sec = total_time-t_hr*3600-t_min*60
-	print'(A14,I2,A5,I2,A7,F5.2,A4)',"time elapsed =",t_hr,' hrs, ',t_min,' mins, ',t_sec,' sec'
+	print'(A24,I2,A5,I2,A7,F5.2,A4)',"simulator time elapsed =",t_hr,' hrs, ',t_min,' mins, ',t_sec,' sec'
 
 end subroutine print_interval
 
