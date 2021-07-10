@@ -3,16 +3,16 @@ implicit none
 contains
 
 !this turns the position vectors into an absolute distance by poop
-function distance(particle_here,particle_there) result(dist)
+pure function distance(particle_here,particle_there) result(dist)
 implicit none
 
-real,dimension(*) :: particle_here(:),particle_there(:)
+real,dimension(*),intent(in) :: particle_here(:),particle_there(:)
 real :: dist,distance_squared,part_here,part_there
 integer :: pos
 
 distance_squared=0.
 
-do pos=1,size(particle_here(:))
+do concurrent (pos=1:size(particle_here(:)))
 	part_here=particle_here(pos)
 	part_there=particle_there(pos)
 	distance_squared=distance_squared+(part_there-part_here)**2
@@ -30,11 +30,14 @@ real,dimension(*) :: particles_everywhere(:,:,:)
 real,dimension(3) ::  distance_vector
 real :: separation,gravitation !this defines the absolute separation and the gravitation
 integer :: pos,particles,particles_here
+real :: dist,distance_squared,part_here,part_there
+
+
 
 particles_everywhere(:,3,particles_here)=[0.,0.,0.]
 
 !calculate effect for every single particle on this particle
-do particles=1,size(particles_everywhere(1,1,:))
+do concurrent (particles=1:size(particles_everywhere(1,1,:)))
 
 	!ensure particle does not gravitate itself
 	if (particles/=particles_here) then
@@ -42,7 +45,19 @@ do particles=1,size(particles_everywhere(1,1,:))
 		!this defines the vector from here to there, and the co-ordinate system
 		distance_vector=particles_everywhere(:,1,particles)-particles_everywhere(:,1,particles_here)
 
-		separation=distance(particles_everywhere(:,1,particles_here),particles_everywhere(:,1,particles))
+		!this turns the position vectors into an absolute distance by poop
+		distance_squared=0.
+
+		do pos=1,size(particles_everywhere(:,1,particles_here))
+			part_here=particles_everywhere(pos,1,particles_here)
+			part_there=particles_everywhere(pos,1,particles)
+			distance_squared=distance_squared+(part_there-part_here)**2
+			if (pos==size(particles_everywhere(:,1,particles_here))) then
+				dist=sqrt(distance_squared)
+			end if
+		end do
+
+		separation=dist
 		gravitation=1./(separation**2)
 
 		!this is where the acceleration vector from the gravitation of each particle is added to particles_here

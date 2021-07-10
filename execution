@@ -12,7 +12,7 @@ then
 fi
 
 #compile and run the fortran particle simulator
-gfortran -fdefault-real-16 physics.f95 particle_sim.f95 -o particle
+nvfortran -stdpar -Minfo -Mr8 physics.f95 particle_sim.f95 -o particle
 ./particle $2 $3 $4 $5 $6 $7
 
 #compile and run the python plotter
