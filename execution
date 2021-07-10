@@ -1,17 +1,19 @@
-#!/bin/bash
+#!/bin/zsh
 
 #make sure number of arguments are correct
-if [ ! $# -eq 6 ]
+if [ ! $# -eq 8 ]
 then
 	echo 'Execute program by format:'
-	echo 'sh execution field_snapshot_scale initial_separation particle_number timesteps delta_time initial_conditions'
-	echo 'initial condition options: random, random_2_clumps'
+	echo 'sh execution field_snapshot_scale initial_separation particle_number timesteps delta_time finesse_factor initial_conditions preview'
+	echo 'initial condition options: random, random_2_clumps, galaxy_2_clumps_edge'
+	echo 'finesse_factor must be a divisor of timesteps'
+	echo 'Preview is a yes/no option for the model display before the model save'
 	exit
 fi
 
 #compile and run the fortran particle simulator
-gfortran physics.f95 particle_sim.f95 -o particle
-./particle $2 $3 $4 $5 $6
+gfortran -fdefault-real-16 physics.f95 particle_sim.f95 -o particle
+./particle $2 $3 $4 $5 $6 $7
 
 #compile and run the python plotter
-python python_plotter.py $1 $3 $4 $5 $6
+python3 python_plotter.py $1 $2 $3 $4 $5 $6 $7 $8 
