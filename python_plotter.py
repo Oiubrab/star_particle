@@ -65,7 +65,7 @@ if preview=='yes':
 		plt.show()
 
 	except:
-
+		#movin' right along
 		pass
 
 #set up the second figure
